@@ -1,8 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using NerYossefWebsite.Models;
+using NerYossefWebsite.Repositories;
+using NerYossefWebsite.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddDbContext<NerYossefDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings"]));
          
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
