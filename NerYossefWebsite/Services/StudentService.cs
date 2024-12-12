@@ -1,4 +1,5 @@
 ﻿using NerYossefWebsite.Models;
+using NerYossefWebsite.NewFolder;
 using NerYossefWebsite.Repositories;
 
 namespace NerYossefWebsite.Services
@@ -10,14 +11,29 @@ namespace NerYossefWebsite.Services
         {
             _studentRepository = studentRepository;
         }
-        public async Task<List<Student>> GetStudents()
+        public async Task<List<studentDTO>> GetStudents()
         {
              return await _studentRepository.GetStudents();
         }
 
-        public async Task<Student> GetStudentById(int id)
+        public async Task<studentDTO> GetStudentById(int id)
         {
             return await _studentRepository.GetStudentById(id);
+        }
+
+        public async Task<studentDTO> CreateStudent(studentDTO studentDto)
+        {
+            return await _studentRepository.CreateStudent(studentDto);
+        }
+
+        public async Task<studentDTO?> Update(int studentId, studentDTO studentDto)
+        {
+            return await _studentRepository.Update(studentId, studentDto);
+        }
+
+        public async Task<bool> Delete(int studentId)
+        {
+            return await _studentRepository.Delete(studentId);
         }
     }
 }
