@@ -203,6 +203,8 @@ public partial class NerYossefDbContext : DbContext
 
             entity.HasIndex(e => e.PassportNumber, "UQ__person__D2CA62993B89953A").IsUnique();
 
+            entity.HasIndex(p => new { p.NumberId, p.PassportNumber }).IsUnique().HasName("UQ_NumberId_PassportNumber");
+
             entity.Property(e => e.PersonId).HasColumnName("person_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(255)

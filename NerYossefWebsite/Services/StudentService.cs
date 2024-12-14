@@ -1,16 +1,20 @@
 ﻿using NerYossefWebsite.Models;
 using NerYossefWebsite.NewFolder;
 using NerYossefWebsite.Repositories;
+using NerYossefWebsite.Services.ServiceValidations;
 
 namespace NerYossefWebsite.Services
 {
     public class StudentService : IStudentService
     {
         private IStudentRepository _studentRepository;
-        public StudentService(IStudentRepository studentRepository) 
+        private studentValidation _studentValidation;
+        public StudentService(IStudentRepository studentRepository, studentValidation studentValidation) 
         {
             _studentRepository = studentRepository;
+            _studentValidation = studentValidation;
         }
+
         public async Task<List<studentDTO>> GetStudents()
         {
              return await _studentRepository.GetStudents();
@@ -23,6 +27,7 @@ namespace NerYossefWebsite.Services
 
         public async Task<studentDTO> CreateStudent(studentDTO studentDto)
         {
+            _studentValidation.validate(studentDto);
             return await _studentRepository.CreateStudent(studentDto);
         }
 

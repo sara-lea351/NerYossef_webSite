@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NerYossefWebsite.DTO_s;
 using NerYossefWebsite.Models;
 using NerYossefWebsite.NewFolder;
 
@@ -121,8 +122,27 @@ namespace NerYossefWebsite.Repositories
                 ExitDate = studentDto.ExitDate
             };
 
+            foreach (documentDTO doc in studentDto.Documents)  
+            {
+                bool isActive; // הגדרת המשתנה isActive
 
+                if (doc.ExpiryDate.HasValue) // אם יש תאריך
+                    isActive = doc.ExpiryDate > DateOnly.FromDateTime(DateTime.Now); // TRUE אם התאריך לא עבר, אחרת FALSE
+                else
+                    isActive = true; // אם אין תאריך, אז TRUE
 
+                var document = new Document
+                {
+                    PersonId = person.PersonId,
+                    DocumentTypeId = doc.DocumentTypeId,
+                    DocumentPath = doc.DocumentPath,
+                    ExpiryDate = doc.ExpiryDate,
+                    UploadedAt = DateOnly.FromDateTime(DateTime.Now),
+                    IsLast = true,
+                    IsActive = isActive // כאן מכניסים את ערך isActive
+                };
+
+            }
 
             // Add the new Student entity to the context (StudentId is auto-generated)
             _StudentContext.Students.Add(student);

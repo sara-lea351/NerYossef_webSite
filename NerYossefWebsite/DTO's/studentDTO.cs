@@ -1,4 +1,7 @@
-﻿namespace NerYossefWebsite.NewFolder
+﻿using NerYossefWebsite.DTO_s;
+using NerYossefWebsite.Models;
+
+namespace NerYossefWebsite.NewFolder
 {
     public class studentDTO
     {
@@ -47,5 +50,7 @@
         public DateOnly EntryDate { get; set; }
 
         public DateOnly? ExitDate { get; set; }
+
+        public ICollection<documentDTO>? Documents { get; set; } = new List<documentDTO>();
     }
 }

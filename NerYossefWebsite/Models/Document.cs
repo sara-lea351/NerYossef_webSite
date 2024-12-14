@@ -13,7 +13,7 @@ public partial class Document
 
     public string DocumentPath { get; set; } = null!;
 
-    public DateOnly ExpiryDate { get; set; }
+    public DateOnly? ExpiryDate { get; set; }
 
     public DateOnly? UploadedAt { get; set; }
 
