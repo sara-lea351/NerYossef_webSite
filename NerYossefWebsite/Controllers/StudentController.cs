@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NerYossefWebsite.DTO_s;
 using NerYossefWebsite.Models;
 using NerYossefWebsite.NewFolder;
 using NerYossefWebsite.Services;
@@ -35,9 +36,9 @@ namespace NerYossefWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<studentDTO>> CreateStudent( [FromBody] studentDTO studentDto)
+        public async Task<ActionResult<studentWithDocumentDTO>> CreateStudent( [FromBody] studentWithDocumentDTO studentDto)
         {
-            studentDTO result = await _studentService.CreateStudent(studentDto);
+            studentWithDocumentDTO result = await _studentService.CreateStudent(studentDto);
             if (result != null)
                 return Ok(result);
             return NoContent();

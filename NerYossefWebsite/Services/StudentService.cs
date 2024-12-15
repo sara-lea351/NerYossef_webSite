@@ -1,4 +1,5 @@
-﻿using NerYossefWebsite.Models;
+﻿using NerYossefWebsite.DTO_s;
+using NerYossefWebsite.Models;
 using NerYossefWebsite.NewFolder;
 using NerYossefWebsite.Repositories;
 using NerYossefWebsite.Services.ServiceValidations;
@@ -25,9 +26,10 @@ namespace NerYossefWebsite.Services
             return await _studentRepository.GetStudentById(id);
         }
 
-        public async Task<studentDTO> CreateStudent(studentDTO studentDto)
+        public async Task<studentWithDocumentDTO> CreateStudent(studentWithDocumentDTO studentDto)
         {
             _studentValidation.validate(studentDto);
+            studentDto.IsPaymentValid = studentDto.PaymentExpiryDate > DateOnly.FromDateTime(DateTime.Now); // TRUE אם התאריך לא עבר, אחרת FALSE
             return await _studentRepository.CreateStudent(studentDto);
         }
 

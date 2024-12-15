@@ -1,28 +1,11 @@
-﻿using NerYossefWebsite.DTO_s;
+﻿using System.Text.Json.Serialization;
+using NerYossefWebsite.DTO_s;
 using NerYossefWebsite.Models;
 
 namespace NerYossefWebsite.NewFolder
 {
-    public class studentDTO
+    public class studentDTO:personDTO
     {
-        public int PersonId { get; set; }
-
-        public string FirstName { get; set; } = null!;
-
-        public string LastName { get; set; } = null!;
-
-        public string? NumberId { get; set; }
-
-        public string? PassportNumber { get; set; }
-
-        public string Phone { get; set; } = null!;
-
-        public string Email { get; set; } = null!;
-
-        public string Address { get; set; } = null!;
-
-        public string PersonType { get; set; } = null!;
-
         public int StudentId { get; set; }
 
         public DateOnly BirthDate { get; set; }
@@ -50,7 +33,5 @@ namespace NerYossefWebsite.NewFolder
         public DateOnly EntryDate { get; set; }
 
         public DateOnly? ExitDate { get; set; }
-
-        public ICollection<documentDTO>? Documents { get; set; } = new List<documentDTO>();
     }
 }

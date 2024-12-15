@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddTransient<IDocumentRepository, DocumentRepository>();
+builder.Services.AddTransient<IDocumentService, DocumentService>();
 builder.Services.AddTransient<studentValidation>();
 builder.Services.AddDbContext<NerYossefDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings"]));
          

@@ -82,7 +82,7 @@ namespace NerYossefWebsite.Repositories
             return studentDetail;
         }
 
-        public async Task<studentDTO> CreateStudent(studentDTO studentDto)
+        public async Task<studentWithDocumentDTO> CreateStudent(studentWithDocumentDTO studentDto)
         {
             // Create a new Person entity from the studentDTO
             var person = new Person
@@ -122,6 +122,11 @@ namespace NerYossefWebsite.Repositories
                 ExitDate = studentDto.ExitDate
             };
 
+            _StudentContext.Students.Add(student);
+
+            // Persist changes to the database (StudentId will be auto-generated)
+            await _StudentContext.SaveChangesAsync();
+
             foreach (documentDTO doc in studentDto.Documents)  
             {
                 bool isActive; // הגדרת המשתנה isActive
@@ -141,14 +146,15 @@ namespace NerYossefWebsite.Repositories
                     IsLast = true,
                     IsActive = isActive // כאן מכניסים את ערך isActive
                 };
+                _StudentContext.Documents.Add(document);
 
+                // Persist changes to the database (StudentId will be auto-generated)
+                await _StudentContext.SaveChangesAsync();
+
+                doc.PersonId = person.PersonId;
+                doc.DocumentId = document.DocumentId;
+                doc.IsActive = isActive;
             }
-
-            // Add the new Student entity to the context (StudentId is auto-generated)
-            _StudentContext.Students.Add(student);
-
-            // Persist changes to the database (StudentId will be auto-generated)
-            await _StudentContext.SaveChangesAsync();
 
             // Map the result back to studentDTO and return
             studentDto.StudentId = student.StudentId; // Set the generated StudentId back to studentDTO
