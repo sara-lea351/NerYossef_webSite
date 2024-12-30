@@ -2,15 +2,20 @@
 using NerYossefWebsite.DTO_s;
 using NerYossefWebsite.Models;
 using NerYossefWebsite.NewFolder;
+using NerYossefWebsite.Services;
 
 namespace NerYossefWebsite.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
         private NerYossefDbContext _StudentContext;
-        public StudentRepository(NerYossefDbContext StudentContext) 
+
+        private readonly IDocumentService _DocumentService;
+
+        public StudentRepository(NerYossefDbContext StudentContext, IDocumentService DocumentService) 
         { 
             _StudentContext = StudentContext;
+            _DocumentService = DocumentService;
         }
 
         public async Task<List<studentDTO>> GetStudents()
@@ -94,7 +99,7 @@ namespace NerYossefWebsite.Repositories
                 Phone = studentDto.Phone,
                 Email = studentDto.Email,
                 Address = studentDto.Address,
-                PersonType = studentDto.PersonType
+                PersonType = "תלמיד"
             };
 
             // Add the new Person entity to the context (PersonId is auto-generated)
@@ -126,34 +131,38 @@ namespace NerYossefWebsite.Repositories
 
             // Persist changes to the database (StudentId will be auto-generated)
             await _StudentContext.SaveChangesAsync();
-
-            foreach (documentDTO doc in studentDto.Documents)  
-            {
-                bool isActive; // הגדרת המשתנה isActive
-
-                if (doc.ExpiryDate.HasValue) // אם יש תאריך
-                    isActive = doc.ExpiryDate > DateOnly.FromDateTime(DateTime.Now); // TRUE אם התאריך לא עבר, אחרת FALSE
-                else
-                    isActive = true; // אם אין תאריך, אז TRUE
-
-                var document = new Document
+            
+            if(studentDto.Documents != null)
+            { 
+                foreach (documentDTO doc in studentDto.Documents)  
                 {
-                    PersonId = person.PersonId,
-                    DocumentTypeId = doc.DocumentTypeId,
-                    DocumentPath = doc.DocumentPath,
-                    ExpiryDate = doc.ExpiryDate,
-                    UploadedAt = DateOnly.FromDateTime(DateTime.Now),
-                    IsLast = true,
-                    IsActive = isActive // כאן מכניסים את ערך isActive
-                };
-                _StudentContext.Documents.Add(document);
+                    bool isActive; // הגדרת המשתנה isActive
 
-                // Persist changes to the database (StudentId will be auto-generated)
-                await _StudentContext.SaveChangesAsync();
+                    if (doc.ExpiryDate.HasValue) // אם יש תאריך
+                        isActive = doc.ExpiryDate > DateOnly.FromDateTime(DateTime.Now); // TRUE אם התאריך לא עבר, אחרת FALSE
+                    else
+                        isActive = true; // אם אין תאריך, אז TRUE
 
-                doc.PersonId = person.PersonId;
-                doc.DocumentId = document.DocumentId;
-                doc.IsActive = isActive;
+                    var document = new Document
+                    {
+                        PersonId = person.PersonId,
+                        DocumentTypeId = doc.DocumentTypeId,
+                        DocumentPath = doc.DocumentPath,
+                        ExpiryDate = doc.ExpiryDate,
+                        UploadedAt = DateOnly.FromDateTime(DateTime.Now),
+                        IsLast = true,
+                        IsActive = isActive // כאן מכניסים את ערך isActive
+                    };
+                    _StudentContext.Documents.Add(document);
+
+                    // Persist changes to the database (StudentId will be auto-generated)
+                    await _StudentContext.SaveChangesAsync();
+
+                    doc.PersonId = person.PersonId;
+                    doc.DocumentId = document.DocumentId;
+                    doc.IsActive = isActive;
+                }
+
             }
 
             // Map the result back to studentDTO and return
@@ -193,7 +202,9 @@ namespace NerYossefWebsite.Repositories
             person.Phone = studentDto.Phone;
             person.Email = studentDto.Email;
             person.Address = studentDto.Address;
-            person.PersonType = studentDto.PersonType;
+            person.PersonType = "תלמיד";
+
+            studentDto.PersonType = "תלמיד"; //במקרה של שליחת סוג ששונה מתלמיד
 
             // Update the Student entity with the new details from studentDto
             student.BirthDate = studentDto.BirthDate;
@@ -239,6 +250,15 @@ namespace NerYossefWebsite.Repositories
                 return false;
             }
 
+            var documents = await _DocumentService.GetDocumentsByPersonId(student.PersonId);
+
+            if (documents != null)
+            {
+                foreach (documentDTO document in documents)
+                {
+                    await _DocumentService.Delete(document.DocumentId);
+                }
+            }
             // Mark the entity for deletion
             _StudentContext.Students.Remove(student);
             _StudentContext.People.Remove(person);

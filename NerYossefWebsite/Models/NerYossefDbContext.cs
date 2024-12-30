@@ -36,7 +36,7 @@ public partial class NerYossefDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=DESKTOP-1M82DEK;Database=NerYossefDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -129,6 +129,7 @@ public partial class NerYossefDbContext : DbContext
 
             entity.Property(e => e.DocumentTypeId).HasColumnName("document_type_id");
             entity.Property(e => e.HasExpiryDate).HasColumnName("has_expiry_date");
+            entity.Property(e => e.ExpiryWarningPeriod).HasColumnName("expiry_warning_period");
             entity.Property(e => e.Type)
                 .HasMaxLength(255)
                 .HasColumnName("type");

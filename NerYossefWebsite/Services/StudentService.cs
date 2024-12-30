@@ -21,7 +21,7 @@ namespace NerYossefWebsite.Services
              return await _studentRepository.GetStudents();
         }
 
-        public async Task<studentDTO> GetStudentById(int id)
+        public async Task<studentDTO?> GetStudentById(int id)
         {
             return await _studentRepository.GetStudentById(id);
         }
@@ -35,11 +35,12 @@ namespace NerYossefWebsite.Services
 
         public async Task<studentDTO?> Update(int studentId, studentDTO studentDto)
         {
+            _studentValidation.validate(studentDto);
             return await _studentRepository.Update(studentId, studentDto);
         }
 
         public async Task<bool> Delete(int studentId)
-        {
+        {   
             return await _studentRepository.Delete(studentId);
         }
     }

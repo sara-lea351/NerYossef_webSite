@@ -29,7 +29,7 @@ namespace NerYossefWebsite.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<List<studentDTO>>> Get(int id)
         {
-            studentDTO student = await _studentService.GetStudentById(id);
+            studentDTO? student = await _studentService.GetStudentById(id);
             if (student == null)
                 return NotFound();
             return Ok(student);
@@ -47,7 +47,7 @@ namespace NerYossefWebsite.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<studentDTO?>> Update(int studentId, [FromBody] studentDTO studentDto)
         {
-            studentDTO result = await _studentService.Update(studentId, studentDto);
+            studentDTO? result = await _studentService.Update(studentId, studentDto);
             if (result != null)
                 return Ok(result);
             return BadRequest();

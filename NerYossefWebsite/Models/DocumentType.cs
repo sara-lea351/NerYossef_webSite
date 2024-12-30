@@ -11,5 +11,7 @@ public partial class DocumentType
 
     public bool HasExpiryDate { get; set; }
 
+    public int? ExpiryWarningPeriod { get; set; }
+
     public virtual ICollection<Document> Documents { get; set; } = new List<Document>();
 }

@@ -16,22 +16,32 @@ namespace NerYossefWebsite.Controllers
             _documentService = documentService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<List<studentDTO>>> Get()
-        //{
-        //    List<studentDTO> students = await _documentService.GetStudents();
-        //    if (students == null)
-        //        return NoContent();
-        //    return Ok(students);
-        //}
-
         [HttpGet("{personId}")]
         public async Task<ActionResult<List<documentDTO>>> GetDocumentsByPersonID(int personId)
         {
             List<documentDTO> documents = await _documentService.GetDocumentsByPersonId(personId);
-            if (documents == null)
+            if (!documents.Any())
                 return NotFound();
             return Ok(documents);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<documentDTO>> CreateDocument(documentDTO documentDto)
+        {
+            documentDTO result = await _documentService.CreateDocument(documentDto);
+            if (result != null)
+                return Ok(result);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            bool result = await _documentService.Delete(id);
+            if (!result)
+                return NotFound();
+            return Ok();
+
         }
     }
 }

@@ -27,8 +27,8 @@ namespace NerYossefWebsite.Services.ServiceValidations
             if (student.NumberId == null && student.PassportNumber == null)
                 throw new ArgumentException("חובה להזין מספר דרכון או מספר זהות");
 
-            if (student.PersonType != "תלמיד")
-                throw new ArgumentException("חובה לסווג תלמיד להיות מסוג תלמיד");
+            //if (student.PersonType != "תלמיד")
+            //    throw new ArgumentException("חובה לסווג תלמיד להיות מסוג תלמיד");
 
             if (!classOptions.Contains(student.Class))
                 throw new ArgumentException("שכבת התלמיד אינה תקינה");
